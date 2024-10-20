@@ -79,15 +79,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const navbarLinks = document.querySelectorAll('.navbar-hoverable .navbar-nav a');
         navbarLinks.forEach(link => {
                 link.addEventListener('mouseleave', function (e) {
-                    const el = this;
                     clearTimeout(closeAllHoveredDropdowns_timer);
                     closeAllHoveredDropdowns_timer = setTimeout(closeAllHoveredDropdowns,500)
                 });
         });
     
         document.addEventListener('mousemove', (event) => {
-            mouseX = event.clientX; // Get mouse X position
-            mouseY = event.clientY; // Get mouse Y position
+            mouseX = event.clientX;
+            mouseY = event.clientY;
         });
     }
 });
