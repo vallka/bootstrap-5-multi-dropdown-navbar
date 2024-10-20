@@ -37,4 +37,79 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     });
+
+    // only on big screens hover will work
+    if (getComputedStyle(document.querySelector('.navbar-toggler')).display=='none') {
+
+        const dropdownTopToggleLinks = document.querySelectorAll('.navbar-hoverable a.dropdown-toggle');
+        dropdownTopToggleLinks.forEach(link => {
+            link.addEventListener('mouseenter', function (e) {
+                const el = this;
+                if (!el.classList.contains('show')) {
+                    el.click();
+                    el.blur()
+                }
+            });
+        });
+        
+        const dropdownItemLinks = document.querySelectorAll('.navbar-hoverable .dropdown-menu a.dropdown-item');
+        dropdownItemLinks.forEach(link => {
+            if (!link.classList.contains('dropdown-toggle')) {
+                link.addEventListener('mouseenter', function (e) {
+                    const el = this;
+                    const dropdownMenu = el.closest('.dropdown-menu');
+                    const activeItems = dropdownMenu.querySelectorAll('.show');
+                    activeItems.forEach(item => item.classList.remove('show'));
+                });
+            }
+        });
+    
+        const dropdownTopItemLinks = document.querySelectorAll('.navbar-hoverable a.nav-link');
+        dropdownTopItemLinks.forEach(link => {
+            if (!link.classList.contains('dropdown-toggle')) {
+                link.addEventListener('mouseenter', function (e) {
+                    const el = this;
+                    const dropdownMenu = el.closest('.navbar-nav');
+                    const activeItems = dropdownMenu.querySelectorAll('.show');
+                    activeItems.forEach(item => item.classList.remove('show'));
+                });
+            }
+        });
+    
+        const navbarLinks = document.querySelectorAll('.navbar-hoverable .navbar-nav a');
+        navbarLinks.forEach(link => {
+                link.addEventListener('mouseleave', function (e) {
+                    const el = this;
+                    clearTimeout(closeAllHoveredDropdowns_timer);
+                    closeAllHoveredDropdowns_timer = setTimeout(closeAllHoveredDropdowns,500)
+                });
+        });
+    
+        document.addEventListener('mousemove', (event) => {
+            mouseX = event.clientX; // Get mouse X position
+            mouseY = event.clientY; // Get mouse Y position
+        });
+    }
 });
+
+let mouseX = 0;
+let mouseY = 0;
+let closeAllHoveredDropdowns_timer = null;
+
+function closeAllHoveredDropdowns() {
+    const dropdowns = document.querySelectorAll('.navbar-hoverable .navbar-nav .show');
+    let isInside = false;
+    dropdowns.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (mouseX >= rect.left && mouseX <= rect.right &&
+            mouseY >= rect.top && mouseY <= rect.bottom) {
+            isInside = true; // Mouse is inside the element
+        }
+    });
+
+    if (!isInside) {
+        dropdowns.forEach(el => {
+            el.classList.remove('show');
+        });
+    }
+}
